@@ -111,7 +111,17 @@ window.TrucoDB = (function () {
   const DEFAULT_CONFIG = {
     nosName: "Nós",
     elesName: "Eles",
-    audioMap: { default: null, "1": null, "3": null, "6": null, "9": null, "12": null },
+    audioMap: {
+      default: null,
+      "1": null,
+      "3": null,
+      "6": null,
+      "9": null,
+      "12": null,
+      perdido1: null,
+      perdido2: null,
+      perdido3: null,
+    },
     pranks: { zona: true, long: true, code: true },
     sound: true,
   };

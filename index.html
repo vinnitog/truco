@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#0f5132" />
+    <meta name="theme-color" content="#000000" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -78,8 +78,12 @@
         <label class="field">Nome do time "Nós"<input id="cfg-nos" type="text" maxlength="24" /></label>
         <label class="field">Nome do time "Eles"<input id="cfg-eles" type="text" maxlength="24" /></label>
 
-        <h2>Áudios do time "Nós"</h2>
-        <p class="hint">Importe seus áudios e escolha qual toca em cada pontuação do Nós.</p>
+        <h2>Áudios</h2>
+        <p class="hint">
+          Importe seus áudios. As pontuações do "Nós" (Padrão/1/Truco/6/9/12) tocam quando você marca.
+          Os "Tento perdido" tocam sozinhos quando o "Eles" pontua: <b>1</b> = Eles pontua primeiro,
+          <b>2</b> = Eles chega/passa a metade (6), <b>3</b> = Eles vence a partida.
+        </p>
         <label class="upload-btn">
           ＋ Importar áudios
           <input id="audio-input" type="file" accept="audio/*" multiple hidden />

@@ -1,15 +1,16 @@
 :root {
-  --green-900: #0a3d27;
-  --green-800: #0f5132;
-  --green-700: #157347;
-  --felt: #14693f;
-  --felt-dark: #0c4a2c;
-  --gold: #ffd166;
-  --cream: #f5f0e1;
-  --red: #c0392b;
-  --blue: #2c6fbb;
-  --ink: #0b1f17;
-  --shadow: rgba(0, 0, 0, 0.35);
+  --bg-0: #000000;
+  --bg-1: #141414;
+  --bg-2: #1d1d1d;
+  --leather: #161616;
+  --panel: rgba(255, 255, 255, 0.05);
+  --panel-line: rgba(255, 255, 255, 0.12);
+  --white: #f5f5f5;
+  --red: #d32f2f;
+  --red-dark: #8e1b1b;
+  --red-soft: #ff6b6b;
+  --ink: #0b0b0b;
+  --shadow: rgba(0, 0, 0, 0.6);
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -27,8 +28,11 @@ body {
 
 body {
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-  color: var(--cream);
-  background: radial-gradient(circle at 50% 0%, var(--felt) 0%, var(--felt-dark) 70%, var(--green-900) 100%);
+  color: var(--white);
+  background:
+    radial-gradient(circle at 50% 0%, var(--bg-2) 0%, var(--bg-1) 45%, var(--bg-0) 100%),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.012) 0 2px, transparent 2px 4px);
+  background-blend-mode: normal;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
@@ -38,18 +42,19 @@ body {
 
 /* ---------- Topbar ---------- */
 .topbar {
-  padding: calc(var(--safe-top) + 10px) 16px 8px;
+  padding: calc(var(--safe-top) + 10px) 16px 6px;
   text-align: center;
 }
 .topbar h1 {
   margin: 0;
   font-size: 1.5rem;
   letter-spacing: 0.5px;
+  color: var(--white);
   cursor: pointer;
 }
 .subtitle {
   font-size: 0.72rem;
-  opacity: 0.7;
+  opacity: 0.6;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
@@ -62,12 +67,13 @@ body {
   width: 64px;
   height: 64px;
   z-index: 50;
-  /* invisível de propósito */
 }
 
 main {
   flex: 1;
   position: relative;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
 }
 
@@ -78,6 +84,16 @@ main {
 }
 .screen.active {
   display: block;
+}
+/* Marcador: empurra placar + botões para baixo, rente ao bottom */
+#screen-marcador.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 1;
+  min-height: 100%;
+  gap: 12px;
+  padding-bottom: 14px;
 }
 @keyframes fade {
   from {
@@ -94,14 +110,13 @@ main {
 .hand-eleven-banner {
   display: none;
   text-align: center;
-  background: var(--gold);
-  color: var(--ink);
+  background: var(--red);
+  color: var(--white);
   font-weight: 700;
   border-radius: 10px;
   padding: 6px;
-  margin-bottom: 8px;
   font-size: 0.85rem;
-  box-shadow: 0 2px 8px var(--shadow);
+  box-shadow: 0 2px 10px rgba(211, 47, 47, 0.4);
 }
 .hand-eleven-banner.show {
   display: block;
@@ -115,50 +130,46 @@ main {
 }
 .panel {
   flex: 1;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
   border-radius: 18px;
   padding: 14px 10px 16px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 16px var(--shadow);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 6px 16px var(--shadow);
   transition: box-shadow 0.25s, border-color 0.25s;
 }
 .panel.hand-eleven {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 2px var(--gold), 0 6px 16px var(--shadow);
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px var(--red), 0 6px 16px var(--shadow);
 }
 .team-name {
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  padding: 4px 10px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  padding: 2px 8px;
   border-radius: 8px;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.panel.nos .team-name {
-  color: var(--gold);
-}
-.panel.eles .team-name {
-  color: #ffb3a7;
+  color: var(--white);
 }
 .score {
-  font-size: clamp(4.5rem, 26vw, 7rem);
+  font-size: clamp(4.5rem, 27vw, 7.5rem);
   font-weight: 800;
   line-height: 1;
-  margin: 6px 0 12px;
+  margin: 4px 0 12px;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 3px 10px var(--shadow);
+  color: var(--white);
+  text-shadow: 0 3px 12px var(--shadow);
 }
 .divider {
   width: 2px;
   align-self: stretch;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.25), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(211, 47, 47, 0.45), transparent);
   margin: 12px 0;
 }
 
@@ -173,18 +184,18 @@ main {
   flex: 1;
   font-size: 1.8rem;
   font-weight: 800;
-  color: var(--ink);
-  background: linear-gradient(180deg, #ffe08a, var(--gold));
+  color: var(--white);
+  background: linear-gradient(180deg, #e74c3c, var(--red));
   border: none;
   border-radius: 14px;
   padding: 14px 0;
   cursor: pointer;
-  box-shadow: 0 4px 0 #c9a23c, 0 6px 12px var(--shadow);
+  box-shadow: 0 4px 0 var(--red-dark), 0 6px 12px var(--shadow);
   transition: transform 0.05s, box-shadow 0.05s;
 }
 .btn-plus:active {
   transform: translateY(3px);
-  box-shadow: 0 1px 0 #c9a23c, 0 3px 8px var(--shadow);
+  box-shadow: 0 1px 0 var(--red-dark), 0 3px 8px var(--shadow);
 }
 .btn-plus.wide {
   width: 100%;
@@ -196,38 +207,37 @@ main {
   width: 48px;
   font-size: 1rem;
   font-weight: 700;
-  color: var(--cream);
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--red-soft);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(211, 47, 47, 0.5);
   border-radius: 12px;
   padding: 14px 0;
   cursor: pointer;
 }
 .btn-minus:active {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(211, 47, 47, 0.18);
 }
 
 /* ---------- Valor da mão ---------- */
 .value-picker {
   display: flex;
   gap: 6px;
-  margin: 16px 0 12px;
 }
 .value-chip {
   flex: 1;
   padding: 12px 4px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--cream);
+  border: 1px solid var(--panel-line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--white);
   font-weight: 700;
   font-size: 0.9rem;
   cursor: pointer;
 }
 .value-chip.active {
-  background: var(--gold);
-  color: var(--ink);
-  border-color: var(--gold);
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
 }
 
 .match-controls {
@@ -238,9 +248,9 @@ main {
   flex: 1;
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--panel-line);
   background: rgba(255, 255, 255, 0.04);
-  color: var(--cream);
+  color: var(--white);
   font-weight: 600;
   cursor: pointer;
 }
@@ -248,15 +258,15 @@ main {
   background: rgba(255, 255, 255, 0.1);
 }
 .ghost.danger {
-  border-color: rgba(192, 57, 43, 0.6);
-  color: #ffb3a7;
+  border-color: rgba(211, 47, 47, 0.6);
+  color: var(--red-soft);
 }
 
 /* ---------- Ranking / histórico ---------- */
 h2 {
   font-size: 1rem;
   margin: 18px 0 8px;
-  color: var(--gold);
+  color: var(--red-soft);
   letter-spacing: 0.5px;
 }
 h3 {
@@ -277,8 +287,8 @@ h3 {
 .ranking li,
 .history li,
 .audio-library li {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
   border-radius: 12px;
   padding: 10px 12px;
   display: flex;
@@ -288,7 +298,7 @@ h3 {
 }
 .ranking .pos {
   font-weight: 800;
-  color: var(--gold);
+  color: var(--red-soft);
   min-width: 22px;
   text-align: center;
 }
@@ -310,11 +320,12 @@ h3 {
   flex: 1 1 100%;
 }
 .history .h-teams b {
-  color: var(--gold);
+  color: var(--white);
 }
 .history .h-win {
   font-size: 0.78rem;
   font-weight: 700;
+  color: var(--red-soft);
 }
 .history .h-date {
   margin-left: auto;
@@ -339,15 +350,19 @@ h3 {
 .field input {
   padding: 11px 12px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.25);
-  color: var(--cream);
+  border: 1px solid var(--panel-line);
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--white);
   font-size: 1rem;
 }
 .hint {
   font-size: 0.78rem;
   opacity: 0.7;
   margin: 0 0 8px;
+  line-height: 1.4;
+}
+.hint b {
+  color: var(--red-soft);
 }
 .secret {
   font-size: 0.7rem;
@@ -355,8 +370,8 @@ h3 {
 }
 .upload-btn {
   display: inline-block;
-  background: var(--gold);
-  color: var(--ink);
+  background: var(--red);
+  color: var(--white);
   font-weight: 700;
   padding: 11px 16px;
   border-radius: 12px;
@@ -374,29 +389,29 @@ h3 {
   gap: 8px;
 }
 .audio-slot label {
-  min-width: 92px;
+  min-width: 110px;
   font-size: 0.82rem;
 }
 .audio-slot select {
   flex: 1;
   padding: 9px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.25);
-  color: var(--cream);
+  border: 1px solid var(--panel-line);
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--white);
 }
 .mini {
   width: 40px;
   padding: 9px 0;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--cream);
+  border: 1px solid var(--panel-line);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--white);
   cursor: pointer;
 }
 .mini.danger {
-  color: #ffb3a7;
-  border-color: rgba(192, 57, 43, 0.5);
+  color: var(--red-soft);
+  border-color: rgba(211, 47, 47, 0.5);
 }
 .audio-library li {
   justify-content: space-between;
@@ -411,13 +426,13 @@ h3 {
 .toggle input {
   width: 20px;
   height: 20px;
-  accent-color: var(--gold);
+  accent-color: var(--red);
 }
 
 /* ---------- Tabs ---------- */
 .tabs {
   display: flex;
-  background: var(--green-900);
+  background: #0a0a0a;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: var(--safe-bottom);
 }
@@ -425,7 +440,7 @@ h3 {
   flex: 1;
   background: none;
   border: none;
-  color: rgba(245, 240, 225, 0.55);
+  color: rgba(245, 245, 245, 0.5);
   font-size: 0.72rem;
   padding: 10px 0;
   display: flex;
@@ -438,14 +453,14 @@ h3 {
   font-size: 1.3rem;
 }
 .tab.active {
-  color: var(--gold);
+  color: var(--red-soft);
 }
 
 /* ---------- Overlay de vitória ---------- */
 .winner-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.82);
   display: none;
   align-items: center;
   justify-content: center;
@@ -456,14 +471,14 @@ h3 {
   display: flex;
 }
 .winner-card {
-  background: linear-gradient(160deg, var(--green-700), var(--green-900));
-  border: 2px solid var(--gold);
+  background: linear-gradient(160deg, #1d1d1d, #000);
+  border: 2px solid var(--red);
   border-radius: 24px;
   padding: 28px 24px;
   text-align: center;
   width: 100%;
   max-width: 320px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
   animation: pop 0.3s ease;
 }
 @keyframes pop {
@@ -482,10 +497,11 @@ h3 {
 .winner-title {
   font-size: 1.4rem;
   font-weight: 800;
-  color: var(--gold);
+  color: var(--red-soft);
 }
 .winner-name {
   font-size: 1.1rem;
   margin: 6px 0 4px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--white);
 }

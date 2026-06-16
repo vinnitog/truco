@@ -18,10 +18,16 @@ window.TrucoAudio = (function () {
     });
   }
 
-  /** Escolhe o áudio para o valor pontuado, caindo no default se preciso. */
+  /**
+   * Escolhe o áudio para o valor/evento. Pontos do "Nós" caem no default
+   * quando não mapeados; os "tento perdido" (derrota) NÃO usam default,
+   * para não tocar som de comemoração quando o Eles pontua.
+   */
   function pickId(config, amount) {
     const map = config.audioMap || {};
-    return map[String(amount)] || map.default || null;
+    const key = String(amount);
+    if (key.indexOf("perdido") === 0) return map[key] || null;
+    return map[key] || map.default || null;
   }
 
   function play(config, amount) {

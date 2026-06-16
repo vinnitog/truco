@@ -31,13 +31,24 @@
   // ---------- Pontuação ----------
   function score(team, amount, opts) {
     if (Truco.isFinished(match)) return;
+    const wasScoreless = Truco.isScoreless(match);
+    const prevEles = match.scores.eles;
     const before = match.scores[team];
     Truco.addPoints(match, team, amount, opts);
     const applied = match.scores[team] - before;
 
     const options = opts || {};
-    if (team === "nos" && applied > 0 && !options.hidden) {
-      TrucoAudio.play(config, applied);
+    if (applied > 0 && !options.hidden) {
+      if (team === "nos") {
+        TrucoAudio.play(config, applied);
+      } else if (!Truco.isFinished(match)) {
+        // Áudios de "tento perdido" quando Eles pontua (derrota tratada no fim).
+        if (Truco.crossedHalf(prevEles, match.scores.eles)) {
+          TrucoAudio.play(config, "perdido2"); // Eles chegou/passou a metade
+        } else if (wasScoreless) {
+          TrucoAudio.play(config, "perdido1"); // Eles pontuou primeiro
+        }
+      }
     }
     persistCurrent();
     renderScoreboard();
@@ -71,7 +82,9 @@
     const name = match.teams[match.winner];
     $("#winner-name").textContent = name;
     $("#winner-overlay").classList.add("show");
-    // O áudio do ponto vencedor já tocou em score(); não duplicar aqui.
+    // Vitória do Nós: o áudio do ponto já tocou em score().
+    // Derrota para o Eles: toca o "tento perdido 3".
+    if (match.winner === "eles") TrucoAudio.play(config, "perdido3");
   }
 
   // ---------- Render: placar ----------
@@ -184,8 +197,18 @@
       audios.forEach(function (a) {
         byId[a.id] = a;
       });
-      const slots = ["default", "1", "3", "6", "9", "12"];
-      const labels = { default: "Padrão", "1": "1 ponto", "3": "Truco (3)", "6": "Retruco (6)", "9": "Nove", "12": "Doze" };
+      const slots = ["default", "1", "3", "6", "9", "12", "perdido1", "perdido2", "perdido3"];
+      const labels = {
+        default: "Padrão",
+        "1": "1 ponto",
+        "3": "Truco (3)",
+        "6": "Retruco (6)",
+        "9": "Nove",
+        "12": "Doze",
+        perdido1: "Tento perdido 1",
+        perdido2: "Tento perdido 2",
+        perdido3: "Tento perdido 3",
+      };
       $("#audio-slots").innerHTML = slots
         .map(function (slot) {
           const current = config.audioMap[slot];
@@ -318,7 +341,8 @@
     });
     $("#audio-slots").addEventListener("click", function (e) {
       const slot = e.target.dataset.preview;
-      if (slot) TrucoAudio.play(Object.assign({}, config, { sound: true }), slot === "default" ? "default" : Number(slot));
+      // pickId faz String(slot); passar a chave crua serve para números e perdidoN.
+      if (slot) TrucoAudio.play(Object.assign({}, config, { sound: true }), slot);
     });
     $("#audio-library").addEventListener("click", function (e) {
       const id = e.target.dataset.delAudio;

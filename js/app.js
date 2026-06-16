@@ -31,7 +31,6 @@
   // ---------- Pontuação ----------
   function score(team, amount, opts) {
     if (Truco.isFinished(match)) return;
-    const wasScoreless = Truco.isScoreless(match);
     const prevEles = match.scores.eles;
     const before = match.scores[team];
     Truco.addPoints(match, team, amount, opts);
@@ -45,8 +44,8 @@
         // Áudios de "tento perdido" quando Eles pontua (derrota tratada no fim).
         if (Truco.crossedHalf(prevEles, match.scores.eles)) {
           TrucoAudio.play(config, "perdido2"); // Eles chegou/passou a metade
-        } else if (wasScoreless) {
-          TrucoAudio.play(config, "perdido1"); // Eles pontuou primeiro
+        } else if (prevEles === 0) {
+          TrucoAudio.play(config, "perdido1"); // primeira vez que o Eles pontua
         }
       }
     }

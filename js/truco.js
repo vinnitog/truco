@@ -99,11 +99,6 @@
     return prevScore < HALF_TARGET && nextScore >= HALF_TARGET;
   }
 
-  /** Verdadeiro quando o placar estava 0 x 0 (ninguém pontuou ainda). */
-  function isScoreless(match) {
-    return match.scores.nos === 0 && match.scores.eles === 0;
-  }
-
   /** Indica se algum time está em "mão de onze" (11 pontos e jogo não acabou). */
   function handOfEleven(match) {
     if (isFinished(match)) return null;
@@ -157,7 +152,6 @@
     undo: undo,
     isFinished: isFinished,
     crossedHalf: crossedHalf,
-    isScoreless: isScoreless,
     handOfEleven: handOfEleven,
     buildRanking: buildRanking,
   };

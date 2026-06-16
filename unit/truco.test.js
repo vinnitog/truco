@@ -122,13 +122,6 @@ test("crossedHalf detecta cruzar a metade (inclusive de uma vez)", () => {
   assert.equal(Truco.crossedHalf(3, 5), false, "não alcançou 6");
 });
 
-test("isScoreless reflete placar 0 x 0", () => {
-  const m = Truco.createMatch();
-  assert.equal(Truco.isScoreless(m), true);
-  Truco.addPoints(m, "eles", 1);
-  assert.equal(Truco.isScoreless(m), false);
-});
-
 test("buildRanking ignora partidas sem vencedor", () => {
   const ranking = Truco.buildRanking([{ teams: { nos: "A", eles: "B" }, winner: null }]);
   assert.equal(ranking.length, 0);

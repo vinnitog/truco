@@ -114,6 +114,21 @@ test("buildRanking agrega vitórias e ordena", () => {
   assert.equal(c.played, 2);
 });
 
+test("crossedHalf detecta cruzar a metade (inclusive de uma vez)", () => {
+  assert.equal(Truco.crossedHalf(5, 6), true, "5 -> 6 cruza");
+  assert.equal(Truco.crossedHalf(4, 7), true, "4 -> 7 passa direto");
+  assert.equal(Truco.crossedHalf(0, 6), true, "0 -> 6 cruza");
+  assert.equal(Truco.crossedHalf(6, 9), false, "já estava em 6");
+  assert.equal(Truco.crossedHalf(3, 5), false, "não alcançou 6");
+});
+
+test("isScoreless reflete placar 0 x 0", () => {
+  const m = Truco.createMatch();
+  assert.equal(Truco.isScoreless(m), true);
+  Truco.addPoints(m, "eles", 1);
+  assert.equal(Truco.isScoreless(m), false);
+});
+
 test("buildRanking ignora partidas sem vencedor", () => {
   const ranking = Truco.buildRanking([{ teams: { nos: "A", eles: "B" }, winner: null }]);
   assert.equal(ranking.length, 0);

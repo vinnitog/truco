@@ -11,6 +11,7 @@
   }
 })(typeof self !== "undefined" ? self : this, function () {
   const GAME_TARGET = 12;
+  const HALF_TARGET = 6; // metade dos 12 tentos — usado no "tento perdido 2"
   const HAND_OF_ELEVEN = 11;
   const TEAMS = ["nos", "eles"];
   // Valores de mão no truco paulista: simples, truco, retruco/seis, nove, doze.
@@ -93,6 +94,16 @@
     return match.winner !== null;
   }
 
+  /** Verdadeiro quando o placar cruzou (ou alcançou) a metade nesta jogada. */
+  function crossedHalf(prevScore, nextScore) {
+    return prevScore < HALF_TARGET && nextScore >= HALF_TARGET;
+  }
+
+  /** Verdadeiro quando o placar estava 0 x 0 (ninguém pontuou ainda). */
+  function isScoreless(match) {
+    return match.scores.nos === 0 && match.scores.eles === 0;
+  }
+
   /** Indica se algum time está em "mão de onze" (11 pontos e jogo não acabou). */
   function handOfEleven(match) {
     if (isFinished(match)) return null;
@@ -135,6 +146,7 @@
 
   return {
     GAME_TARGET: GAME_TARGET,
+    HALF_TARGET: HALF_TARGET,
     HAND_OF_ELEVEN: HAND_OF_ELEVEN,
     HAND_VALUES: HAND_VALUES,
     TEAMS: TEAMS,
@@ -144,6 +156,8 @@
     addPoints: addPoints,
     undo: undo,
     isFinished: isFinished,
+    crossedHalf: crossedHalf,
+    isScoreless: isScoreless,
     handOfEleven: handOfEleven,
     buildRanking: buildRanking,
   };

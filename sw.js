@@ -1,5 +1,5 @@
 /* Service Worker — cache-first do app shell para uso offline. */
-const CACHE_NAME = "truco-v1";
+const CACHE_NAME = "truco-v2";
 const ASSETS = [
   "./",
   "./index.html",

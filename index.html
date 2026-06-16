@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0f5132" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Marcador de Truco</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icons/icon.svg" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <!-- Pegadinha 1: zona invisível no canto superior direito -->
+    <div id="prank-zone" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <h1 id="brand">🃏 Truco</h1>
+      <span class="subtitle">Paulista · 12 tentos</span>
+    </header>
+
+    <main>
+      <!-- ===== Marcador ===== -->
+      <section id="screen-marcador" class="screen active">
+        <div id="hand-of-eleven" class="hand-eleven-banner"></div>
+
+        <div class="board">
+          <div id="panel-nos" class="panel nos">
+            <!-- Pegadinha 2: toque longo no nome do time "Nós" -->
+            <div id="name-nos" class="team-name">Nós</div>
+            <div id="score-nos" class="score">0</div>
+            <div class="panel-actions">
+              <button id="btn-minus-nos" class="btn-minus" type="button" aria-label="Corrigir Nós">−1</button>
+              <button id="btn-plus-nos" class="btn-plus" type="button" aria-label="Marcar para Nós">+</button>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div id="panel-eles" class="panel eles">
+            <div id="name-eles" class="team-name">Eles</div>
+            <div id="score-eles" class="score">0</div>
+            <div class="panel-actions">
+              <button id="btn-minus-eles" class="btn-minus" type="button" aria-label="Corrigir Eles">−1</button>
+              <button id="btn-plus-eles" class="btn-plus" type="button" aria-label="Marcar para Eles">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="value-picker" role="group" aria-label="Valor da mão">
+          <button class="value-chip active" data-value="1" type="button">1</button>
+          <button class="value-chip" data-value="3" type="button">Truco</button>
+          <button class="value-chip" data-value="6" type="button">6</button>
+          <button class="value-chip" data-value="9" type="button">9</button>
+          <button class="value-chip" data-value="12" type="button">12</button>
+        </div>
+
+        <div class="match-controls">
+          <button id="btn-undo" class="ghost" type="button">↶ Desfazer</button>
+          <button id="btn-new" class="ghost" type="button">＋ Nova partida</button>
+        </div>
+      </section>
+
+      <!-- ===== Ranking ===== -->
+      <section id="screen-ranking" class="screen">
+        <h2>Ranking de duplas</h2>
+        <ol id="ranking-list" class="ranking"></ol>
+        <h2>Histórico de partidas</h2>
+        <ul id="history-list" class="history"></ul>
+      </section>
+
+      <!-- ===== Config ===== -->
+      <section id="screen-config" class="screen">
+        <h2>Times</h2>
+        <label class="field">Nome do time "Nós"<input id="cfg-nos" type="text" maxlength="24" /></label>
+        <label class="field">Nome do time "Eles"<input id="cfg-eles" type="text" maxlength="24" /></label>
+
+        <h2>Áudios do time "Nós"</h2>
+        <p class="hint">Importe seus áudios e escolha qual toca em cada pontuação do Nós.</p>
+        <label class="upload-btn">
+          ＋ Importar áudios
+          <input id="audio-input" type="file" accept="audio/*" multiple hidden />
+        </label>
+        <div id="audio-slots" class="audio-slots"></div>
+        <h3>Biblioteca</h3>
+        <ul id="audio-library" class="audio-library"></ul>
+        <label class="toggle"><input id="cfg-sound" type="checkbox" /> Som ligado</label>
+
+        <h2>Pegadinhas <span class="secret">(secreto 🤫)</span></h2>
+        <p class="hint">Gatilhos que somam +1 ao Nós sem alarde.</p>
+        <label class="toggle"><input id="cfg-prank-zona" type="checkbox" /> Zona invisível (canto superior direito)</label>
+        <label class="toggle"><input id="cfg-prank-long" type="checkbox" /> Toque longo no nome "Nós"</label>
+        <label class="toggle"><input id="cfg-prank-code" type="checkbox" /> 3 toques rápidos no título "🃏 Truco"</label>
+
+        <h2>Dados</h2>
+        <button id="btn-clear-history" class="ghost danger" type="button">Apagar histórico e ranking</button>
+      </section>
+    </main>
+
+    <nav class="tabs">
+      <button class="tab active" data-screen="marcador" type="button"><span>🎯</span>Marcador</button>
+      <button class="tab" data-screen="ranking" type="button"><span>🏆</span>Ranking</button>
+      <button class="tab" data-screen="config" type="button"><span>⚙️</span>Config</button>
+    </nav>
+
+    <div id="winner-overlay" class="winner-overlay">
+      <div class="winner-card">
+        <div class="winner-trophy">🏆</div>
+        <div class="winner-title">Vitória!</div>
+        <div id="winner-name" class="winner-name"></div>
+        <button id="btn-new-overlay" class="btn-plus wide" type="button">Nova partida</button>
+      </div>
+    </div>
+
+    <script src="js/truco.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/pranks.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

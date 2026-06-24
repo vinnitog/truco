@@ -413,6 +413,16 @@ h3 {
   color: var(--red-soft);
   border-color: rgba(211, 47, 47, 0.5);
 }
+.mini.badge {
+  width: auto;
+  padding: 5px 10px;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+  cursor: default;
+  background: transparent;
+}
 .audio-library li {
   justify-content: space-between;
 }

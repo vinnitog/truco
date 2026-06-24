@@ -1,5 +1,5 @@
 /* Service Worker — cache-first do app shell para uso offline. */
-const CACHE_NAME = "truco-v3";
+const CACHE_NAME = "truco-v4";
 const ASSETS = [
   "./",
   "./index.html",
@@ -11,6 +11,9 @@ const ASSETS = [
   "./js/pranks.js",
   "./js/app.js",
   "./icons/icon.svg",
+  "./audio/panico-na-tv.mp3",
+  "./audio/byd.mp3",
+  "./audio/mestre-alborghetti.mp3",
 ];
 
 self.addEventListener("install", function (e) {

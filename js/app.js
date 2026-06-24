@@ -28,6 +28,21 @@
     localStorage.setItem(CURRENT_KEY, JSON.stringify(match));
   }
 
+  /**
+   * Semeia os áudios embutidos (Pânico/BYD/Mestre) nos slots de "tento perdido"
+   * de configs antigas que foram salvas antes deste default existir. Roda uma
+   * única vez (flag audioDefaultsV1) e respeita slots já escolhidos pelo usuário.
+   */
+  function ensureAudioDefaults() {
+    if (config.audioDefaultsV1) return;
+    const defaults = TrucoDB.DEFAULT_CONFIG.audioMap;
+    ["perdido1", "perdido2", "perdido3"].forEach(function (slot) {
+      if (!config.audioMap[slot]) config.audioMap[slot] = defaults[slot];
+    });
+    config.audioDefaultsV1 = true;
+    TrucoDB.saveConfig(config);
+  }
+
   // ---------- Pontuação ----------
   function score(team, amount, opts) {
     if (Truco.isFinished(match)) return;
@@ -236,13 +251,11 @@
       $("#audio-library").innerHTML = audios.length
         ? audios
             .map(function (a) {
-              return (
-                '<li><span>' +
-                escapeHtml(a.name) +
-                '</span><button class="mini danger" data-del-audio="' +
-                a.id +
-                '" type="button">🗑</button></li>'
-              );
+              // Embutidos não podem ser apagados: mostram um selo no lugar da lixeira.
+              const action = a.builtin
+                ? '<span class="mini badge" title="Áudio padrão do app">padrão</span>'
+                : '<button class="mini danger" data-del-audio="' + a.id + '" type="button">🗑</button>';
+              return "<li><span>" + escapeHtml(a.name) + "</span>" + action + "</li>";
             })
             .join("")
         : '<li class="empty">Nenhum áudio importado.</li>';
@@ -373,6 +386,7 @@
   }
 
   function init() {
+    ensureAudioDefaults();
     bind();
     renderScoreboard();
     renderRanking();

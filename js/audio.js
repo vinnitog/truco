@@ -11,7 +11,13 @@ window.TrucoAudio = (function () {
     if (!id) return Promise.resolve(null);
     if (urlCache[id]) return Promise.resolve(urlCache[id]);
     return TrucoDB.getAudio(id).then(function (audio) {
-      if (!audio || !audio.blob) return null;
+      if (!audio) return null;
+      // Embutidos: tocam pelo caminho do arquivo (sem object URL).
+      if (audio.src) {
+        urlCache[id] = audio.src;
+        return audio.src;
+      }
+      if (!audio.blob) return null;
       const url = URL.createObjectURL(audio.blob);
       urlCache[id] = url;
       return url;

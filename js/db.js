@@ -11,6 +11,24 @@ window.TrucoDB = (function () {
 
   let dbPromise = null;
 
+  /**
+   * Áudios embutidos no app (default). Não vivem no IndexedDB: são servidos
+   * direto de arquivos no bundle e cacheados pelo service worker (offline).
+   * `src` sinaliza ao TrucoAudio que deve tocar pelo caminho, sem object URL.
+   */
+  const BUILTIN_AUDIOS = [
+    { id: "builtin_panico", name: "Pânico na TV (1º ponto do Eles)", src: "audio/panico-na-tv.mp3", builtin: true },
+    { id: "builtin_byd", name: "BYD (Eles passa da metade)", src: "audio/byd.mp3", builtin: true },
+    { id: "builtin_mestre", name: "Mestre Alborghetti (Eles vence)", src: "audio/mestre-alborghetti.mp3", builtin: true },
+  ];
+
+  function findBuiltin(id) {
+    for (let i = 0; i < BUILTIN_AUDIOS.length; i++) {
+      if (BUILTIN_AUDIOS[i].id === id) return BUILTIN_AUDIOS[i];
+    }
+    return null;
+  }
+
   function open() {
     if (dbPromise) return dbPromise;
     dbPromise = new Promise(function (resolve, reject) {
@@ -91,11 +109,14 @@ window.TrucoDB = (function () {
     return tx(STORE_AUDIOS, "readonly", function (s) {
       return reqValue(s.getAll());
     }).then(function (list) {
-      return list || [];
+      // Embutidos primeiro, depois os importados pelo usuário.
+      return BUILTIN_AUDIOS.concat(list || []);
     });
   }
 
   function getAudio(id) {
+    const builtin = findBuiltin(id);
+    if (builtin) return Promise.resolve(builtin);
     return tx(STORE_AUDIOS, "readonly", function (s) {
       return reqValue(s.get(id));
     });
@@ -118,12 +139,14 @@ window.TrucoDB = (function () {
       "6": null,
       "9": null,
       "12": null,
-      perdido1: null,
-      perdido2: null,
-      perdido3: null,
+      perdido1: "builtin_panico",
+      perdido2: "builtin_byd",
+      perdido3: "builtin_mestre",
     },
     pranks: { zona: true, long: true, code: true },
     sound: true,
+    // Marca a migração que semeia os áudios embutidos em configs já salvas.
+    audioDefaultsV1: false,
   };
 
   function getConfig() {
@@ -156,5 +179,6 @@ window.TrucoDB = (function () {
     getConfig: getConfig,
     saveConfig: saveConfig,
     DEFAULT_CONFIG: DEFAULT_CONFIG,
+    BUILTIN_AUDIOS: BUILTIN_AUDIOS,
   };
 })();
